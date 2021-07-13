@@ -1,0 +1,17 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "0402197014",
+    "database": "graphqlts",
+    "entities": [
+        "dist/entities/*.js"
+    ],
+    "migrations": [
+        "dist/migrations/*.js"
+    ],
+    "cli": {
+        "migrationsDir": "src/migrations"
+    }
+}
