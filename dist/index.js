@@ -37,13 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
+var typeorm_1 = require("typeorm");
 var app_1 = require("./app");
-var typeorm_1 = require("./config/typeorm");
+var typeorm_2 = require("./config/typeorm");
 var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     var app;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, typeorm_1.connect()];
+            case 0: return [4 /*yield*/, typeorm_2.connect()];
             case 1:
                 _a.sent();
                 console.log("Database is connected");
@@ -57,3 +58,5 @@ var main = function () { return __awaiter(void 0, void 0, void 0, function () {
     });
 }); };
 main();
+var connection = typeorm_1.getConnection();
+console.log({ connection: connection });

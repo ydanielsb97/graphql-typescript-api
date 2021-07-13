@@ -11,26 +11,32 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Product = void 0;
 var typeorm_1 = require("typeorm");
+var type_graphql_1 = require("type-graphql");
 var Product = /** @class */ (function () {
     function Product() {
     }
     __decorate([
+        type_graphql_1.Field(),
         typeorm_1.PrimaryGeneratedColumn(),
         __metadata("design:type", Number)
     ], Product.prototype, "id", void 0);
     __decorate([
+        type_graphql_1.Field(),
         typeorm_1.Column(),
         __metadata("design:type", String)
     ], Product.prototype, "name", void 0);
     __decorate([
+        type_graphql_1.Field(),
         typeorm_1.Column("int", { default: 0 }),
         __metadata("design:type", Number)
     ], Product.prototype, "quantity", void 0);
     __decorate([
+        type_graphql_1.Field(function () { return String; }),
         typeorm_1.CreateDateColumn(),
         __metadata("design:type", Date)
     ], Product.prototype, "createdAt", void 0);
     Product = __decorate([
+        type_graphql_1.ObjectType(),
         typeorm_1.Entity("products")
     ], Product);
     return Product;
