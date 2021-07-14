@@ -1,8 +1,8 @@
 import { Query, Resolver, Mutation, Arg } from "type-graphql";
-import { getConnection, getCustomRepository } from "typeorm";
+import { getCustomRepository } from "typeorm";
 import { CreateProductDto } from "../dto/createProduct.dto";
 import { UpdateProductDto } from "../dto/updateProduct.dto";
-import Product from "../entities/product";
+import Product from "../entities/product.entity";
 import {ProductRepository} from "../repository/ProductRepository";
 
 @Resolver()

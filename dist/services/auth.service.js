@@ -54,49 +54,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startServer = void 0;
-var express_1 = __importStar(require("express"));
-var apollo_server_express_1 = require("apollo-server-express");
-var testResolver_1 = require("./resolvers/testResolver");
-var type_graphql_1 = require("type-graphql");
-var ProductResolver_1 = require("./resolvers/ProductResolver");
-var auth_routes_1 = __importDefault(require("./routes/auth.routes"));
-var app = express_1.default();
-// config
-app.set("port", process.env.PORT || 4000);
-// middlewares
-app.use(express_1.default.json());
-app.use(express_1.urlencoded({ extended: false }));
-// routes
-app.use("/api/auth", auth_routes_1.default);
-var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var server, _a;
-    var _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+exports.createUser = exports.verifyCredentials = void 0;
+var token = __importStar(require("./token.service"));
+var typeorm_1 = require("typeorm");
+var User_repository_1 = require("../repository/User.repository");
+var verifyCredentials = function (userName, password) { return __awaiter(void 0, void 0, void 0, function () {
+    var _userRepository, user, passValid, newToken;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
-                _a = apollo_server_express_1.ApolloServer.bind;
-                _b = {};
-                return [4 /*yield*/, type_graphql_1.buildSchema({
-                        resolvers: [testResolver_1.TestResolver, ProductResolver_1.ProductResolver],
-                    })];
+                _userRepository = typeorm_1.getCustomRepository(User_repository_1.UserRepository);
+                return [4 /*yield*/, _userRepository.findByUsername(userName)];
             case 1:
-                server = new (_a.apply(apollo_server_express_1.ApolloServer, [void 0, (_b.schema = _c.sent(),
-                        _b.context = function (_a) {
-                            var req = _a.req, res = _a.res;
-                            return ({ req: req, res: res });
-                        },
-                        _b)]))();
-                return [4 /*yield*/, server.start()];
+                user = _a.sent();
+                if (!user)
+                    return [2 /*return*/, { error: "Incorrect username or password" }];
+                return [4 /*yield*/, user.comparePassword(password)];
             case 2:
-                _c.sent();
-                server.applyMiddleware({ app: app, path: "/graphql" });
-                return [2 /*return*/, app];
+                passValid = _a.sent();
+                if (!passValid)
+                    return [2 /*return*/, { error: "Incorrect username or password" }];
+                newToken = token.generateToken(user.id);
+                return [2 /*return*/, { newToken: newToken }];
         }
     });
 }); };
-exports.startServer = startServer;
+exports.verifyCredentials = verifyCredentials;
+var createUser = function (createUserDto) { return __awaiter(void 0, void 0, void 0, function () {
+    var _userRepository, creation, newToken;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _userRepository = typeorm_1.getCustomRepository(User_repository_1.UserRepository);
+                return [4 /*yield*/, _userRepository.createUser(createUserDto)];
+            case 1:
+                creation = _a.sent();
+                if (creation.error)
+                    return [2 /*return*/, creation];
+                newToken = token.generateToken(creation.id);
+                return [2 /*return*/, { newToken: newToken }];
+        }
+    });
+}); };
+exports.createUser = createUser;

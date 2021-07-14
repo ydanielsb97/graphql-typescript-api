@@ -9,22 +9,35 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateProductDto = void 0;
+var typeorm_1 = require("typeorm");
 var type_graphql_1 = require("type-graphql");
-var CreateProductDto = /** @class */ (function () {
-    function CreateProductDto() {
+var Product = /** @class */ (function () {
+    function Product() {
     }
     __decorate([
-        type_graphql_1.Field(function () { return String; }),
-        __metadata("design:type", String)
-    ], CreateProductDto.prototype, "name", void 0);
-    __decorate([
-        type_graphql_1.Field(function () { return type_graphql_1.Int; }),
+        type_graphql_1.Field(),
+        typeorm_1.PrimaryGeneratedColumn(),
         __metadata("design:type", Number)
-    ], CreateProductDto.prototype, "quantity", void 0);
-    CreateProductDto = __decorate([
-        type_graphql_1.InputType()
-    ], CreateProductDto);
-    return CreateProductDto;
+    ], Product.prototype, "id", void 0);
+    __decorate([
+        type_graphql_1.Field(),
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], Product.prototype, "name", void 0);
+    __decorate([
+        type_graphql_1.Field(),
+        typeorm_1.Column("int", { default: 0 }),
+        __metadata("design:type", Number)
+    ], Product.prototype, "quantity", void 0);
+    __decorate([
+        type_graphql_1.Field(function () { return String; }),
+        typeorm_1.CreateDateColumn(),
+        __metadata("design:type", Date)
+    ], Product.prototype, "createdAt", void 0);
+    Product = __decorate([
+        type_graphql_1.ObjectType(),
+        typeorm_1.Entity("products")
+    ], Product);
+    return Product;
 }());
-exports.CreateProductDto = CreateProductDto;
+exports.default = Product;

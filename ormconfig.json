@@ -5,9 +5,7 @@
     "username": "postgres",
     "password": "0402197014",
     "database": "graphqlts",
-    "entities": [
-        "src/entities/*.ts"
-    ],
+    "entities": ["src/**/*.entity.ts"],
     "migrations": [
         "dist/migrations/*.js"
     ],

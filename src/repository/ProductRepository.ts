@@ -1,7 +1,7 @@
 import {EntityRepository, Repository} from 'typeorm'
 import { CreateProductDto } from '../dto/createProduct.dto';
 import { UpdateProductDto } from '../dto/updateProduct.dto';
-import Product from "../entities/product";
+import Product from "../entities/product.entity";
 
 @EntityRepository(Product)
 export class ProductRepository extends Repository<Product>{

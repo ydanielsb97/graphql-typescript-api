@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { startServer } from "./app";
-import { connect } from "./config/typeorm";
+import { connect } from "./database/typeorm";
+import * as env from "./config/variables.env";
 
 const main = async () => {
   await connect();
@@ -8,10 +9,9 @@ const main = async () => {
 
   const app = await startServer();
 
-  app.listen(3000);
+  app.listen(env.PORT);
 
-  console.log("Server on port", 3000);
-
+  console.log("Server on port", env.PORT);
 
 };
 

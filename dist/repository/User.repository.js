@@ -1,4 +1,25 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,36 +56,52 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.init1626149439296 = void 0;
-var init1626149439296 = /** @class */ (function () {
-    function init1626149439296() {
-        this.name = 'init1626149439296';
+exports.UserRepository = void 0;
+var typeorm_1 = require("typeorm");
+var user_entity_1 = __importDefault(require("../entities/user.entity"));
+var UserRepository = /** @class */ (function (_super) {
+    __extends(UserRepository, _super);
+    function UserRepository() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    init1626149439296.prototype.up = function (queryRunner) {
+    UserRepository.prototype.createUser = function (createUserDto) {
         return __awaiter(this, void 0, void 0, function () {
+            var user, newUser;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.query("CREATE TABLE \"products\" (\"id\" SERIAL NOT NULL, \"name\" character varying NOT NULL, \"quantity\" integer NOT NULL DEFAULT '0', \"createdAt\" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT \"PK_0806c755e0aca124e67c0cf6d7d\" PRIMARY KEY (\"id\"))")];
+                    case 0: return [4 /*yield*/, this.findOne({
+                            where: {
+                                userName: createUserDto.userName,
+                            },
+                        })];
                     case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                        user = _a.sent();
+                        if (user)
+                            return [2 /*return*/, { error: "User already exists" }];
+                        newUser = this.create(createUserDto);
+                        return [4 /*yield*/, this.save(newUser)];
+                    case 2: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    init1626149439296.prototype.down = function (queryRunner) {
+    UserRepository.prototype.findByUsername = function (userName) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, queryRunner.query("DROP TABLE \"products\"")];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
+                    case 0: return [4 /*yield*/, this.findOne({ where: { userName: userName } })];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
-    return init1626149439296;
-}());
-exports.init1626149439296 = init1626149439296;
+    UserRepository = __decorate([
+        typeorm_1.EntityRepository(user_entity_1.default)
+    ], UserRepository);
+    return UserRepository;
+}(typeorm_1.Repository));
+exports.UserRepository = UserRepository;

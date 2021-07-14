@@ -8,9 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -51,93 +48,78 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProductResolver = void 0;
-var type_graphql_1 = require("type-graphql");
 var typeorm_1 = require("typeorm");
-var createProduct_dto_1 = require("../dto/createProduct.dto");
-var updateProduct_dto_1 = require("../dto/updateProduct.dto");
-var product_entity_1 = __importDefault(require("../entities/product.entity"));
-var ProductRepository_1 = require("../repository/ProductRepository");
-var ProductResolver = /** @class */ (function () {
-    function ProductResolver(_productRepository) {
-        this._productRepository = _productRepository;
-        this._productRepository = typeorm_1.getCustomRepository(ProductRepository_1.ProductRepository);
+var bcrypt_1 = __importDefault(require("bcrypt"));
+var User = /** @class */ (function () {
+    function User() {
     }
-    ProductResolver.prototype.findAll = function () {
+    User.prototype.hashPassword = function (password) {
         return __awaiter(this, void 0, void 0, function () {
+            var salt, newPassword;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._productRepository.findAll()];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    ProductResolver.prototype.findById = function (id) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._productRepository.findById(id)];
-                    case 1: return [2 /*return*/, _a.sent()];
-                }
-            });
-        });
-    };
-    ProductResolver.prototype.createProduct = function (product) {
-        return __awaiter(this, void 0, void 0, function () {
-            var newProduct;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._productRepository.createUser(product)];
+                    case 0: return [4 /*yield*/, bcrypt_1.default.genSalt(10)];
                     case 1:
-                        newProduct = _a.sent();
-                        return [2 /*return*/, newProduct];
+                        salt = _a.sent();
+                        return [4 /*yield*/, bcrypt_1.default.hash(password, salt)];
+                    case 2:
+                        newPassword = _a.sent();
+                        return [2 /*return*/, this.password = newPassword];
                 }
             });
         });
     };
-    ProductResolver.prototype.updateProduct = function (id, product) {
+    User.prototype.comparePassword = function (password) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this._productRepository.updateById(id, product)];
+                    case 0: return [4 /*yield*/, bcrypt_1.default.compare(password, this.password)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
     };
     __decorate([
-        type_graphql_1.Query(function () { return [product_entity_1.default]; }),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", []),
-        __metadata("design:returntype", Promise)
-    ], ProductResolver.prototype, "findAll", null);
+        typeorm_1.PrimaryGeneratedColumn(),
+        __metadata("design:type", Number)
+    ], User.prototype, "id", void 0);
     __decorate([
-        type_graphql_1.Query(function () { return product_entity_1.default; }),
-        __param(0, type_graphql_1.Arg("id")),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Number]),
-        __metadata("design:returntype", Promise)
-    ], ProductResolver.prototype, "findById", null);
+        typeorm_1.Generated("uuid"),
+        __metadata("design:type", String)
+    ], User.prototype, "uuid", void 0);
     __decorate([
-        type_graphql_1.Mutation(function () { return product_entity_1.default; }),
-        __param(0, type_graphql_1.Arg('product')),
-        __metadata("design:type", Function),
-        __metadata("design:paramtypes", [createProduct_dto_1.CreateProductDto]),
-        __metadata("design:returntype", Promise)
-    ], ProductResolver.prototype, "createProduct", null);
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], User.prototype, "firstName", void 0);
     __decorate([
-        type_graphql_1.Mutation(function () { return product_entity_1.default; }),
-        __param(0, type_graphql_1.Arg('id')),
-        __param(1, type_graphql_1.Arg('product')),
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], User.prototype, "lastName", void 0);
+    __decorate([
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], User.prototype, "email", void 0);
+    __decorate([
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], User.prototype, "userName", void 0);
+    __decorate([
+        typeorm_1.Column(),
+        __metadata("design:type", String)
+    ], User.prototype, "password", void 0);
+    __decorate([
+        typeorm_1.CreateDateColumn(),
+        __metadata("design:type", Date)
+    ], User.prototype, "createAt", void 0);
+    __decorate([
+        typeorm_1.BeforeInsert(),
         __metadata("design:type", Function),
-        __metadata("design:paramtypes", [Number, updateProduct_dto_1.UpdateProductDto]),
+        __metadata("design:paramtypes", [String]),
         __metadata("design:returntype", Promise)
-    ], ProductResolver.prototype, "updateProduct", null);
-    ProductResolver = __decorate([
-        type_graphql_1.Resolver(),
-        __metadata("design:paramtypes", [ProductRepository_1.ProductRepository])
-    ], ProductResolver);
-    return ProductResolver;
+    ], User.prototype, "hashPassword", null);
+    User = __decorate([
+        typeorm_1.Entity("users")
+    ], User);
+    return User;
 }());
-exports.ProductResolver = ProductResolver;
+exports.default = User;

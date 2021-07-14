@@ -54,49 +54,49 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startServer = void 0;
-var express_1 = __importStar(require("express"));
-var apollo_server_express_1 = require("apollo-server-express");
-var testResolver_1 = require("./resolvers/testResolver");
-var type_graphql_1 = require("type-graphql");
-var ProductResolver_1 = require("./resolvers/ProductResolver");
-var auth_routes_1 = __importDefault(require("./routes/auth.routes"));
-var app = express_1.default();
-// config
-app.set("port", process.env.PORT || 4000);
-// middlewares
-app.use(express_1.default.json());
-app.use(express_1.urlencoded({ extended: false }));
-// routes
-app.use("/api/auth", auth_routes_1.default);
-var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var server, _a;
-    var _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+exports.Register = exports.logIn = void 0;
+var _authService = __importStar(require("../services/auth.service"));
+var logIn = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, userName, password, validation, error_1;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
-                _a = apollo_server_express_1.ApolloServer.bind;
-                _b = {};
-                return [4 /*yield*/, type_graphql_1.buildSchema({
-                        resolvers: [testResolver_1.TestResolver, ProductResolver_1.ProductResolver],
-                    })];
+                _b.trys.push([0, 2, , 3]);
+                _a = req.body, userName = _a.userName, password = _a.password;
+                return [4 /*yield*/, _authService.verifyCredentials(userName, password)];
             case 1:
-                server = new (_a.apply(apollo_server_express_1.ApolloServer, [void 0, (_b.schema = _c.sent(),
-                        _b.context = function (_a) {
-                            var req = _a.req, res = _a.res;
-                            return ({ req: req, res: res });
-                        },
-                        _b)]))();
-                return [4 /*yield*/, server.start()];
+                validation = _b.sent();
+                if (validation.error)
+                    return [2 /*return*/, res.json(validation)];
+                res.cookie('token', validation.newToken, { httpOnly: true });
+                return [2 /*return*/, res.json(validation)];
             case 2:
-                _c.sent();
-                server.applyMiddleware({ app: app, path: "/graphql" });
-                return [2 /*return*/, app];
+                error_1 = _b.sent();
+                return [2 /*return*/, res.json({ error: error_1 })];
+            case 3: return [2 /*return*/];
         }
     });
 }); };
-exports.startServer = startServer;
+exports.logIn = logIn;
+var Register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var creation, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, _authService.createUser(req.body)];
+            case 1:
+                creation = _a.sent();
+                if (creation.error)
+                    return [2 /*return*/, { creation: creation }];
+                res.cookie('token', creation.newToken, { httpOnly: true });
+                return [2 /*return*/, res.json(creation)];
+            case 2:
+                error_2 = _a.sent();
+                return [2 /*return*/, res.json({ error: error_2 })];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
+exports.Register = Register;
